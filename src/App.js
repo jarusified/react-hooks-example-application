@@ -25,7 +25,7 @@ import socket from 'socket.io-client';
 // Use socket to fetch request to data 
 // Socket server's url and action 
 const useSocket = (serverUrl, action) => {
-	const [data, setData] = React.useState(0);
+	const [data, setData] = React.useState([]);
 	const [isConnected, setConnected] = React.useState(false);
 
 	React.useEffect(() => {

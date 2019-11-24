@@ -38,9 +38,7 @@ class App():
         @sockets.on('init', namespace='/')
         def init():
             print("Got reqwest")
-            result =  {
-                "characters": self.state.get_all_characters(),
-            }
+            result =  self.state.get_all_characters()
             emit('init', result, json=True)
 
         @sockets.on('reset', namespace='/')
