@@ -22,6 +22,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import { ClientSocket, useSocket } from "use-socketio";
 import socket from 'socket.io-client';
 
+const getUrl = "http://127.0.0.1:5000"
+
 // Use socket to fetch request to data 
 // Socket server's url and action 
 const useSocket = (serverUrl, action) => {
@@ -31,11 +33,11 @@ const useSocket = (serverUrl, action) => {
 	React.useEffect(() => {
 		const client = socket.connect(serverUrl);
 
-		client.emit('init')
 
 		client.on("connect", () => {
 			console.log("Connected :)")
 			setConnected(true)
+			client.emit('init')
 		});
 		client.on("disconnect", () => {
 			console.log("Disconnected :(")
@@ -53,52 +55,62 @@ const useSocket = (serverUrl, action) => {
 const Character = () => {
 
 	// const [characters, setCharacter] = useState([])
-
-	const getUrl = "http://127.0.0.1:5000"
-
 	const { data, isConnected } = useSocket(getUrl, 'init')
+
 	return (
 		<Card style={{ width: '18rem' }}>
 			<Card.Img variant="top" src="holder.js/100px180" />
 			<Card.Body>
-				<Card.Title>{ data } </Card.Title>
+				<Card.Title> </Card.Title>
+
 				<Card.Text>
 					{`CONNECTED: ${isConnected}`}
-    			</Card.Text>
+				</Card.Text>
 				<Button variant="dark">Reveal more information</Button>
 			</Card.Body>
 		</Card>
 	);
 };
 
+const Header = () => {
+
+	const { data, isConnected } = useSocket(getUrl, 'init')
+
+	// let placeholderText = 'Search : e.g. ' + data[10]
+
+	return (
+		<header className="App-header">
+			<Navbar fixed="top" bg="light" expand="sm">
+				<Navbar.Brand href="#home"> SuperHero API challenge - Suraj</Navbar.Brand>
+				<Navbar.Toggle aria-controls="basic-navbar-nav" />
+				<Navbar.Collapse id="basic-navbar-nav">
+					<Nav className="mr-auto">
+						<Nav.Link href="#home">Compare Characters</Nav.Link>
+						<NavDropdown title="Visualize using" id="basic-nav-dropdown">
+							<NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+							<NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
+							<NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+							<NavDropdown.Divider />
+							<NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+						</NavDropdown>
+					</Nav>
+					<Form inline>
+						<FormControl type="text" placeholder={'e.g. : ' + data[10]} className="mr-sm-2" />
+						<Button variant="outline-success">Search</Button>
+					</Form>
+				</Navbar.Collapse>
+			</Navbar>
+		</header>
+	);
+}
+
 function App() {
 
 	return (
 		<div className="App">
-			<header className="App-header">
-				<Navbar fixed="top" bg="light" expand="sm">
-					<Navbar.Brand href="#home"> SuperHero API challenge - Suraj</Navbar.Brand>
-					<Navbar.Toggle aria-controls="basic-navbar-nav" />
-					<Navbar.Collapse id="basic-navbar-nav">
-						<Nav className="mr-auto">
-							<Nav.Link href="#home">Compare Characters</Nav.Link>
-							<NavDropdown title="Visualize using" id="basic-nav-dropdown">
-								<NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-								<NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-								<NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-								<NavDropdown.Divider />
-								<NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-							</NavDropdown>
-						</Nav>
-						<Form inline>
-							<FormControl type="text" placeholder="Search" className="mr-sm-2" />
-							<Button variant="outline-success">Search</Button>
-						</Form>
-					</Navbar.Collapse>
-				</Navbar>
-			</header>
+			<Header />
 			<Character />
-		</div>
+		</div >
 
 	);
 }
