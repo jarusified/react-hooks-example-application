@@ -1,5 +1,5 @@
 flask
-flask-socketio
+flask_socketio
 networkx
 pandas
 requests

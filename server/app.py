@@ -7,8 +7,10 @@ import uuid
 import argparse
 from flask_cors import CORS
 from networkx.readwrite import json_graph
-
 from pymongo import MongoClient
+
+# Local imports
+from state import State
 
 app = Flask(__name__, static_url_path='/public')
 sockets = SocketIO(app)
@@ -16,6 +18,10 @@ CORS(app)
 
 class App():
     def __init__(self):
+        self.debug = True
+        self.state = State()
+        self.state.set_df('../data.csv')
+
         self.create_socket_server()
         sockets.run(app, debug = self.debug, use_reloader=True)
 
@@ -31,13 +37,16 @@ class App():
     def create_socket_server(self):
         @sockets.on('init', namespace='/')
         def init():
-            result = getIDList()
-            emit('init', config_json, json=True)
+            print("Got reqwest")
+            result =  {
+                "characters": self.state.get_all_characters(),
+            }
+            emit('init', result, json=True)
 
         @sockets.on('reset', namespace='/')
         def reset(data):
             if self.debug:
-                self.print('[Request] Reset', data)
+                print('[Request] Reset', data)
             emit('reset', result, json=True)
 
         @sockets.on('search', namespace='/')
