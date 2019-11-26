@@ -1,5 +1,10 @@
 # Illumio-coding challenge
 
+## Intreface 
+
+![Image description](figures/interface-final.png)
+
+
 ## Installation
 
 ``` bash
@@ -49,12 +54,13 @@
    jupyter notebook
    ```
 
-3. ***Storing into a database:*** MongoDB or something. [TODO.]
+3. ***Storing into a database:*** MongoDB or something. [TODO.] <https://stackoverflow.com/questions/20167194/insert-a-pandas-dataframe-into-mongodb-using-pymongo>
 
 4. ***React hooks:*** Recently, I heard about how react does not use class based
    components and I thought I should probably give React a try for the following
    reasons: 
-   <https://stackoverflow.com/questions/20167194/insert-a-pandas-dataframe-into-mongodb-using-pymongo>
+   1. Functional components are more stateful. 
+   2. 
 
 5. ***UI Components***
 
