@@ -59,6 +59,7 @@ class App:
         def search(data):
             print("[Search]: {0}".format(data))
             result = self.state.get_character(data['characters'])
+            print(result)
             emit("search", result, json=True)
 
     def create_server(self):

@@ -2,6 +2,7 @@ from logger import log
 import os
 import pandas as pd
 import requests
+import json
 
 
 class State(object):
@@ -42,8 +43,9 @@ class State(object):
         return self.df["name"].tolist()
 
     def get_character(self, characters, api=''):
+        responses = []
         for character in characters:
             character_id = self.df.loc[self.df['name'] == character]['id'].tolist()[0]
-        
-        response = requests.get(self.url + '/' +  str(character_id) + '/' + api).text
-        return response
+            response = requests.get(self.url + '/' +  str(character_id) + '/' + api).text
+            responses.append(json.loads(response))
+        return responses

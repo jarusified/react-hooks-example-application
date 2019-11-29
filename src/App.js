@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
+import { CharacterContext } from './CharacterContext'
 
 // Panel imports
 // import Panel from 'react-bootstrap/Panel'
@@ -9,16 +10,20 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 import Header from './components/header';
-// import Character from './components/character';
+import Character from './components/character';
 
-const App = ()  => {
-	// let placeholder = 'asddd'
+const App = () => {
+	const [superhero, setSuperHero] = useState([])
+
+	const providerValue = useMemo(() => ({ superhero, setSuperHero }), [superhero, setSuperHero])
+
 	return (
-		// <Component>
-		<div className="App">
-			<Header placeholder="SuperHero API challenge - Suraj"/>
-		</div >
-		// </Component>
+		<CharacterContext.Provider value= {providerValue}>
+			<div className="App">
+				<Header placeholder="SuperHero API challenge - Suraj" />
+				<Character />
+			</div >
+		</CharacterContext.Provider>
 
 	);
 }

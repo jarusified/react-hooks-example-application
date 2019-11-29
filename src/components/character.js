@@ -1,23 +1,29 @@
 // eslint-disable
-import React, { useState, useCallback, Component } from "react";
+import React, { useState, useCallback, Component, useContext } from "react";
+import { For } from 'react-loops'
 
-import Button from 'react-bootstrap/Button'
 // Card imports
 import Card from 'react-bootstrap/Card'
 
+import { CharacterContext } from "../CharacterContext";
+
 function Character() {
+    const { superhero, setSuperHero } = useContext(CharacterContext)
 
-	return (
-		<Card style={{ width: '18rem' }}>
-			<Card.Img variant="top" src="holder.js/100px180" />
-			<Card.Body>
-				<Card.Title> </Card.Title>
+    console.log(superhero)
 
-				<Card.Text>
-				</Card.Text>
-				<Button variant="dark">Reveal more information</Button>
-			</Card.Body>
-		</Card>
+    return (
+        <For of={superhero} as= { hero =>
+            <Card style={{ width: '18rem' }}>
+                <Card.Img variant="top" src="holder.js/100px180" />
+                <Card.Body>
+                    <Card.Title> </Card.Title>
+                    {hero['name']}
+                    <Card.Text>
+                    </Card.Text>
+                </Card.Body>
+            </Card>
+        }/>
 	);
 };
 
