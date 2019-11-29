@@ -5,24 +5,31 @@ import React, { useState, useCallback, Fragment } from "react";
 import { Typeahead } from 'react-bootstrap-typeahead'; // ES2015
 import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
-import Button from "react-bootstrap/Button"
+import SearchButton from './searchButton'
 
-import useSearch from '../hooks/search';
 import useSocket from '../hooks/socket';
 
 const getUrl = "http://127.0.0.1:4000"
 
 const Search = ({ value, onChange, placeholder }) => {
     const [searchString, setSearchString] = useState("");
+    const [compare, setCompare] = useState(false)
     const { data, isConnected }  = useSocket(getUrl, 'init', {})
-    const { characterData, isData } = useSocket(getUrl, 'search', searchString);
 
-    const handleInputSelecta = (e) => {
-        console.log(e)
+    const handleCharacterAdd = (e) => {
+        setSearchString(e)
+    }
+
+    const handleEnableCompare = (e) => {
+        if (compare){
+            setCompare(false)
+        }
+        else{
+            setCompare(true)
+        }
     }
 
     const handleInputSelect = useCallback(e => {
-        console.log(e)
         if ((e.target.value.length > 0)) { // For Clearing Selected Input
             setSearchString(e.target.value)
             console.log('aaaa')
@@ -30,36 +37,33 @@ const Search = ({ value, onChange, placeholder }) => {
         console.log(searchString)
     }, [searchString, setSearchString])
 
-    const handleSubmit = useCallback(e => { 
-        onChange({});
-    }, [value.name])
-
     return (
         <Fragment>
             <Typeahead
                 id="search-typehead"
                 clearButton
                 labelKey="name"
-                multiple={false}
+                multiple={true}
                 options={data}
+                onChange = {handleCharacterAdd}
                 placeholder={placeholder}
             />
 
             <Form inline>
                 <Form.Text className="text" style={{ fontSize: '16px', color: "black" }}>
-                    Enable comparison
+                    Compare
     			</Form.Text>
                 <FormControl
-                    // checked={data}
-                    onChange={ handleInputSelecta }
+                    checked={data}
+                    onChange={ handleEnableCompare }
                     type="checkbox"
                     placeholder={placeholder}
                     className="mr-lg-2">
                 </FormControl>
 
-                <Button
-                    onClick={handleSubmit}
-                    variant="outline-success">Search</Button>
+                <SearchButton
+                    characters={searchString}
+                    variant="outline-success">Search</SearchButton>
             </Form>
         </Fragment>
     );
