@@ -58,7 +58,7 @@ class App:
         @sockets.on("search", namespace="/")
         def search(data):
             print("[Search]: {0}".format(data))
-            result = "sddfdfff"
+            result = self.state.get_character(data['characters'])
             emit("search", result, json=True)
 
     def create_server(self):

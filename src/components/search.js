@@ -1,5 +1,5 @@
 // eslint-disable
-import React, { useState, useCallback, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 
 // Form suggestion imports
 import { Typeahead } from 'react-bootstrap-typeahead'; // ES2015
@@ -12,12 +12,12 @@ import useSocket from '../hooks/socket';
 const getUrl = "http://127.0.0.1:4000"
 
 const Search = ({ value, onChange, placeholder }) => {
-    const [searchString, setSearchString] = useState("");
+    const [characterList, setCharacterList] = useState("");
     const [compare, setCompare] = useState(false)
     const { data, isConnected }  = useSocket(getUrl, 'init', {})
 
     const handleCharacterAdd = (e) => {
-        setSearchString(e)
+        setCharacterList(e)
     }
 
     const handleEnableCompare = (e) => {
@@ -28,14 +28,6 @@ const Search = ({ value, onChange, placeholder }) => {
             setCompare(true)
         }
     }
-
-    const handleInputSelect = useCallback(e => {
-        if ((e.target.value.length > 0)) { // For Clearing Selected Input
-            setSearchString(e.target.value)
-            console.log('aaaa')
-        }
-        console.log(searchString)
-    }, [searchString, setSearchString])
 
     return (
         <Fragment>
@@ -60,9 +52,9 @@ const Search = ({ value, onChange, placeholder }) => {
                     placeholder={placeholder}
                     className="mr-lg-2">
                 </FormControl>
-
+    
                 <SearchButton
-                    characters={searchString}
+                    characters={characterList}
                     variant="outline-success">Search</SearchButton>
             </Form>
         </Fragment>

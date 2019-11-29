@@ -1,12 +1,20 @@
 from logger import log
 import os
 import pandas as pd
+import requests
 
 
 class State(object):
     def __init__(self):
         self.df = None
         self.map = {}
+        self.token = self.read_token()
+        self.url = 'https://superheroapi.com/api/' + self.token 
+
+    def read_token(self):
+        with open('./../token.txt', 'r') as f:
+            token = f.read()
+        return token
 
     def lookup_by_column(self, col_name):
         return ret
@@ -32,3 +40,10 @@ class State(object):
 
     def get_all_characters(self):
         return self.df["name"].tolist()
+
+    def get_character(self, characters, api=''):
+        for character in characters:
+            character_id = self.df.loc[self.df['name'] == character]['id'].tolist()[0]
+        
+        response = requests.get(self.url + '/' +  str(character_id) + '/' + api).text
+        return response
