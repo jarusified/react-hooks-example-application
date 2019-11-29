@@ -6,17 +6,21 @@ import socket from 'socket.io-client';
 
 // Use socket to fetch request to data 
 // Socket server's url and action 
-const useSocket = (serverUrl, action, query = []) => {
+const useSocket = (serverUrl, action, query) => {
 	const [data, setData] = useState([]);
 	const [isConnected, setConnected] = useState(false);
 
 	useEffect(() => {
 		const client = socket.connect(serverUrl);
 
+		let debounced = undefined;
+		
 		client.on("connect", () => {
 			console.log("Connected :)")
 			setConnected(true)
-			client.emit('init')
+			debounced = setTimeout(() => {
+				client.emit(action, query)
+			}, 300)
 		});
 
 		client.on("disconnect", () => {
@@ -27,11 +31,17 @@ const useSocket = (serverUrl, action, query = []) => {
 		client.on(action, (data) => {
 			console.log("Data incoming [", action, "]: ", data)
 			setData(data);
+			// setConnected(false)
+			// client.emit('disconnect')
 		})
 
-	}, [serverUrl, action, isConnected]);
+		return () => {
+			clearTimeout(debounced)
+		}
 
-	return { data };
+	}, [serverUrl]);
+
+	return { data, isConnected } ;
 }
 
 export default useSocket;

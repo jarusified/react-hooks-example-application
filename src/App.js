@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // Panel imports
 // import Panel from 'react-bootstrap/Panel'
@@ -9,16 +9,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 import Header from './components/header';
-import Character from './components/character';
+// import Character from './components/character';
 
-function App() {
+const App = ()  => {
+	// let placeholder = 'asddd'
 	return (
-		<Component>
-			<div className="App">
-				<Header placeholder="SuperHero API challenge - Suraj" />
-				<Character />
-			</div >
-		</Component>
+		// <Component>
+		<div className="App">
+			<Header placeholder="SuperHero API challenge - Suraj"/>
+		</div >
+		// </Component>
 
 	);
 }

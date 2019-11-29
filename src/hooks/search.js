@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getLocations } from "../api/search";
+// import { getCharacter } from "../api/search";
 
 const useSearch = searchString => {
 	const [locations, setLocations] = useState([]);
@@ -9,13 +9,13 @@ const useSearch = searchString => {
 		setLoading(true);
 
 		const debounced = setTimeout(() => {
-			getLocations(searchString).then(({ data }) => {
-					setLocations(data);
-					setLoading(false);
-				})
-				.catch(e => {
-					setLoading(false);
-				});
+			// getCharacter(searchString).then(({ data }) => {
+			// 		setLocations(data);
+			// 		setLoading(false);
+			// 	})
+			// 	.catch(e => {
+			// 		setLoading(false);
+			// 	});
 		}, 300);
 
 		return () => {

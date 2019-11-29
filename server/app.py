@@ -31,7 +31,7 @@ class App:
         self.state.set_df("../data.csv")
 
         self.create_socket_server()
-        sockets.run(app, debug=self.debug, use_reloader=True)
+        sockets.run(app, debug=self.debug, port=4000, use_reloader=True)
 
     # Custom print function.
     def print(self, action, data={}):
@@ -44,8 +44,8 @@ class App:
 
     def create_socket_server(self):
         @sockets.on("init", namespace="/")
-        def init():
-            print("Got reqwest")
+        def init(data):
+            print("Got request")
             result = self.state.get_all_characters()
             emit("init", result, json=True)
 
@@ -57,6 +57,7 @@ class App:
 
         @sockets.on("search", namespace="/")
         def search(data):
+            print("[Search]: {0}".format(data))
             result = ""
             emit("search", result, json=True)
 
