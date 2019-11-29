@@ -17,15 +17,20 @@ const Search = ({ value, onChange, placeholder }) => {
     const { data, isConnected }  = useSocket(getUrl, 'init', {})
     const { characterData, isData } = useSocket(getUrl, 'search', searchString);
 
+    const handleInputSelecta = (e) => {
+        console.log(e)
+    }
 
     const handleInputSelect = useCallback(e => {
-        if (!(value.name && (e.target.value.length < value.name.length))) { // For Clearing Selected Input
+        console.log(e)
+        if ((e.target.value.length > 0)) { // For Clearing Selected Input
             setSearchString(e.target.value)
+            console.log('aaaa')
         }
         console.log(searchString)
-    })
+    }, [searchString, setSearchString])
 
-    const handleSubmit = useCallback(e => {
+    const handleSubmit = useCallback(e => { 
         onChange({});
     }, [value.name])
 
@@ -46,7 +51,7 @@ const Search = ({ value, onChange, placeholder }) => {
     			</Form.Text>
                 <FormControl
                     // checked={data}
-                    onChange={ handleInputSelect }
+                    onChange={ handleInputSelecta }
                     type="checkbox"
                     placeholder={placeholder}
                     className="mr-lg-2">
