@@ -69,22 +69,22 @@ const MyBoldText = styled(Text)`
   padding-left: 2px
 `
 
-function Character() {
+function Character({ currentCharacters }) {
     const { superhero, setSuperHero } = useContext(CharacterContext)
+
+    console.log(currentCharacters)
 
     return (
         <MyCardGroup style={{ width: 20 * superhero.length + 'rem', fontSize: '12px' }}>
-            <For of={superhero} as={hero =>
+            <For of={currentCharacters} as={hero =>
                 <Card className="card" border="info" style={{ width: '18rem' }}>
                     <MyCharacterHeader>
                         {hero.name}
                     </MyCharacterHeader>
-                    {/* <Card.Img variant="top" src={hero['image']['url']} /> */}
                     <ImgContainer>
                         <Img src={hero.image.url} />
                         <ImgMeta>
                             <ImgIcons>
-                                {/* {hero.} */}
                             </ImgIcons>
                         </ImgMeta>
                     </ImgContainer>

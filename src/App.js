@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import { CharacterContext } from './CharacterContext'
 
 // Panel imports
@@ -12,19 +12,20 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import Header from './components/header';
 import Character from './components/character';
 
+import SocketContext from './components/socket_context/context'
+
 const App = () => {
 	const [superhero, setSuperHero] = useState([])
 
 	const providerValue = useMemo(() => ({ superhero, setSuperHero }), [superhero, setSuperHero])
 
-	return (
-		<CharacterContext.Provider value= {providerValue}>
-			<div className="App">
-				<Header placeholder="SuperHero API challenge - Suraj" />
-				<Character />
-			</div >
-		</CharacterContext.Provider>
+	const { currentCharacters, characterList } = useContext(SocketContext)
 
+	return (
+		<CharacterContext.Provider value={providerValue}>
+			<Header placeholder="SuperHero API challenge - Suraj" characterList={ characterList }/>
+			<Character currentCharacters={ currentCharacters }/>
+		</CharacterContext.Provider>
 	);
 }
 

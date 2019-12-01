@@ -1,32 +1,20 @@
 // eslint-disable
-import React, { useState, Fragment } from "react";
+import React, { Fragment, useContext, useState} from "react";
 
 // Form suggestion imports
 import { Typeahead } from 'react-bootstrap-typeahead'; // ES2015
-import Form from "react-bootstrap/Form";
-import FormControl from "react-bootstrap/FormControl";
-import SearchButton from './searchButton'
+import  Button  from 'react-bootstrap/Button'
 
-import useSocket from '../hooks/socket';
+import { CharacterContext } from '../CharacterContext'
+import { SocketContext } from '../components/socket_context/context'
+import { search } from '../sockets/emit'
 
-const getUrl = "http://127.0.0.1:4000"
-
-const Search = ({ value, onChange, placeholder }) => {
-    const [characterList, setCharacterList] = useState("");
-    const [compare, setCompare] = useState(false)
-    const { data, isConnected }  = useSocket(getUrl, 'init', {})
+const Search = ({ placeholder,  characterList }) => {
+    const [ currentCharacterList, setCurrentCharacterList ] = useState([])
+    const { superhero, setSuperHero } = useContext(CharacterContext)
 
     const handleCharacterAdd = (e) => {
-        setCharacterList(e)
-    }
-
-    const handleEnableCompare = (e) => {
-        if (compare){
-            setCompare(false)
-        }
-        else{
-            setCompare(true)
-        }
+        setCurrentCharacterList(e)
     }
 
     return (
@@ -36,27 +24,12 @@ const Search = ({ value, onChange, placeholder }) => {
                 clearButton
                 labelKey="name"
                 multiple={true}
-                options={data}
-                onChange = {handleCharacterAdd}
+                options={characterList}
+                onChange={handleCharacterAdd}
                 placeholder={placeholder}
             />
 
-            <Form inline>
-                <Form.Text className="text" style={{ fontSize: '16px', color: "black" }}>
-                    Compare
-    			</Form.Text>
-                <FormControl
-                    checked={data}
-                    onChange={ handleEnableCompare }
-                    type="checkbox"
-                    placeholder={placeholder}
-                    className="mr-lg-2">
-                </FormControl>
-    
-                <SearchButton
-                    characters={characterList}
-                    variant="outline-success">Search</SearchButton>
-            </Form>
+            <Button variant="outline-success" onClick={() => search({ 'characters': currentCharacterList })}>Search</Button>
         </Fragment>
     );
 };

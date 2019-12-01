@@ -3,8 +3,6 @@ import Button from 'react-bootstrap/Button'
 import socket from 'socket.io-client';
 import { CharacterContext } from '../CharacterContext'
 
-const getUrl = "http://127.0.0.1:4000"
-
 export default ({ characters }) => {
     const [isSending, setIsSending] = useState(false)
     const isMounted = useRef(true)
@@ -17,9 +15,7 @@ export default ({ characters }) => {
             'characters': characters
         })
         client.on('search', (data) => {
-            // data = JSON.parse(data)
-            console.log("Data incoming: ", data)
-            
+            console.log("Data incoming: ", data)            
             setSuperHero(data)
         })
     }
@@ -38,7 +34,7 @@ export default ({ characters }) => {
         setIsSending(true)
         
         // send the actual request
-        const data = await socket_request(characters)
+        await socket_request(characters)
         // once the request is sent, update state again
         if (isMounted.current) // only update if we are still mounted
             setIsSending(false)

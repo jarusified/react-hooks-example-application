@@ -45,22 +45,31 @@ class App:
     def create_socket_server(self):
         @sockets.on("init", namespace="/")
         def init(data):
-            print("Got request")
+            print("[Request] Init")
             result = self.state.get_all_characters()
+            print(result)
             emit("init", result, json=True)
 
         @sockets.on("reset", namespace="/")
         def reset(data):
-            if self.debug:
-                print("[Request] Reset", data)
+            print("[Request] Reset", data)
             emit("reset", result, json=True)
 
         @sockets.on("search", namespace="/")
         def search(data):
-            print("[Search]: {0}".format(data))
+            print("[Request] Search: {0}".format(data))
             result = self.state.get_character(data['characters'])
             print(result)
             emit("search", result, json=True)
+
+        @sockets.on("random", namespace="/")
+        def random(data):
+            print("[Request] Random: {0}".format(data))
+            result = self.state.get_random_characters(data['characters'])
+            print(result)
+            emit("random", result, json=True)
+
+
 
     def create_server(self):
         app.debug = True
