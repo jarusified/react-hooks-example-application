@@ -1,6 +1,7 @@
 from logger import log
 import os
 import pandas as pd
+import numpy as np
 import requests
 import json
 
@@ -40,12 +41,21 @@ class State(object):
         self.df = pd.read_csv(abs_file_path)
 
     def get_all_characters(self):
-        return self.df["name"].tolist()
+        self.all_characters = self.df["name"].tolist()
+        return self.all_characters
 
     def get_character(self, characters, api=''):
         responses = []
         for character in characters:
             character_id = self.df.loc[self.df['name'] == character]['id'].tolist()[0]
             response = requests.get(self.url + '/' +  str(character_id) + '/' + api).text
+            responses.append(json.loads(response))
+        return responses
+
+    def get_random_characters(self, number, api=''):
+        random_arr = np.random.randint(low=0, high=len(self.all_characters)-1, size=number)
+        responses = []
+        for num in random_arr:
+            response = requests.get(self.url + '/' +  str(num) + '/' + api).text
             responses.append(json.loads(response))
         return responses

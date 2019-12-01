@@ -10,6 +10,7 @@ import styled from 'styled-components';
 // For the Search bar. Refer components/search.js
 import Search from './search'
 import Button from 'react-bootstrap/Button';
+import { random } from '../sockets/emit';
 
 const Header = ({ placeholder, characterList }) => {
 	const [character, setCharacter] = useState({})
@@ -32,16 +33,9 @@ const Header = ({ placeholder, characterList }) => {
 	}
 
 	const generateRandom = (e) => {
-		// Some hard coding. 
-		let max = 732
-		let min = 0
-		let characterIDs = []
-		for (let i = 0; i < randomCharacter; i += 1) {
-			let randomNumber = Math.floor(Math.random() * (max - min) + min)
-			characterIDs.push(randomNumber)
-		}
-		setCharacterIDList(characterIDs)
-		console.log(characterIDs, character)
+		random({
+			"random_number": 4
+		})
 	}
 
 	return (
@@ -54,9 +48,6 @@ const Header = ({ placeholder, characterList }) => {
 						<Button variant="outline-info"
 							onClick={generateRandom}>
 							Generate 10 random characters
-						</Button>
-						<Button onClick={handleEnableCompare}>
-							Compare with target
 						</Button>
 					</Nav>
 					<Search value={character} onChange={setCharacter} placeholder="Enter one or more characters. " characterList = { characterList } />

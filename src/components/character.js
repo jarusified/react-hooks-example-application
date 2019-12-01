@@ -1,5 +1,5 @@
 // eslint-disable
-import React, { useState, useCallback, Component, useContext } from "react";
+import React, { useState } from "react";
 import { For } from 'react-loops'
 import styled from 'styled-components';
 
@@ -13,7 +13,12 @@ import ListGroup from 'react-bootstrap/ListGroup'
 // Text import
 import Text from 'react-bootstrap/FormText'
 
-import { CharacterContext } from "../CharacterContext";
+// Card flip animation. 
+import ReactCardFlip from 'react-card-flip';
+
+// Icon import.
+import { FaRedo } from 'react-icons/fa';
+import { AiOutlineStar, AiTwotoneStar } from 'react-icons/ai'
 
 const ImgContainer = styled.div`
   position: relative;
@@ -70,45 +75,80 @@ const MyBoldText = styled(Text)`
 `
 
 function Character({ currentCharacters }) {
-    const { superhero, setSuperHero } = useContext(CharacterContext)
 
-    console.log(currentCharacters)
+    const [isFlipped, setIsFlipped] = useState(false)
+    const [isTarget, setIsTarget] = useState(false)
+
+    const reverseFlip = (e) => {
+
+    }
+
+    const assignAsTarget = (e) => {
+
+    }
+
+    const unassignAsTarget = (e) => {
+
+    }
 
     return (
         <MyCardGroup style={{ width: 20 * currentCharacters.length + 'rem', fontSize: '12px' }}>
             <For of={currentCharacters} as={hero =>
-                <Card className="card" border="info" style={{ width: '18rem' }}>
-                    <MyCharacterHeader>
-                        {hero.name}
-                    </MyCharacterHeader>
-                    <ImgContainer>
-                        <Img src={hero.image.url} />
-                        <ImgMeta>
-                            <ImgIcons>
-                            </ImgIcons>
-                        </ImgMeta>
-                    </ImgContainer>
-                    <Card.Body>
-                        <ListGroup variant="flush">
-                            <ListGroup.Item>
-                                <MyBoldText> Real name </MyBoldText>
-                                {hero['biography']['full-name']}</ListGroup.Item>
-                            <ListGroup.Item>
-                                <MyBoldText> Origin </MyBoldText>
-                                {hero['biography']['place-of-birth']}</ListGroup.Item>
-                            
-                            <ListGroup.Item>
-                                <MyBoldText> Occupation </MyBoldText>
-                                {hero['work']['occupation']}</ListGroup.Item>
-                            <ListGroup.Item>
-                                <MyBoldText> First Appearance </MyBoldText>
-                                {hero['work']['first-appearance']}</ListGroup.Item>
-                            <ListGroup.Item>
-                                <MyBoldText> Publisher </MyBoldText>
-                                {hero['biography']['publisher']}</ListGroup.Item>
-                        </ListGroup>
-                    </Card.Body>
-                </Card>
+
+                <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
+                    <Card className="card" border="info" style={{ width: '18rem' }}>
+                        <MyCharacterHeader>
+                            {hero.name}
+                            <FaRedo style={{ float: 'right' }} onClick={ reverseFlip }></FaRedo>
+
+                            <AiTwotoneStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'block' : 'none' }} onClick={assignAsTarget}></AiTwotoneStar> :
+                            <AiOutlineStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'none' : 'block' }} onClick={unassignAsTarget}></AiOutlineStar>
+
+                        </MyCharacterHeader>
+                        <ImgContainer>
+                            <Img src={hero.image.url} />
+                            <ImgMeta>
+                                <ImgIcons>
+                                </ImgIcons>
+                            </ImgMeta>
+                        </ImgContainer>
+                        <Card.Body>
+                            <ListGroup variant="flush">
+                                <ListGroup.Item>
+                                    <MyBoldText> Real name </MyBoldText>
+                                    {hero['biography']['full-name']}</ListGroup.Item>
+                                <ListGroup.Item>
+                                    <MyBoldText> Origin </MyBoldText>
+                                    {hero['biography']['place-of-birth']}</ListGroup.Item>
+
+                                <ListGroup.Item>
+                                    <MyBoldText> Occupation </MyBoldText>
+                                    {hero['work']['occupation']}</ListGroup.Item>
+                                <ListGroup.Item>
+                                    <MyBoldText> First Appearance </MyBoldText>
+                                    {hero['work']['first-appearance']}</ListGroup.Item>
+                                <ListGroup.Item>
+                                    <MyBoldText> Publisher </MyBoldText>
+                                    {hero['biography']['publisher']}</ListGroup.Item>
+                            </ListGroup>
+                        </Card.Body>
+                    </Card>
+
+                    <Card className="card" border="info" style={{ width: '18rem' }}>
+                        <MyCharacterHeader>
+                            {hero.name}
+                            <FaRedo style={{ float: 'right' }}></FaRedo>
+
+                            {isTarget} ?
+                            <AiTwotoneStar style={{ float: 'right' }}></AiTwotoneStar> :
+                            <AiOutlineStar style={{ float: 'right' }}></AiOutlineStar>
+
+                        </MyCharacterHeader>
+                    </Card>
+
+
+                </ReactCardFlip>
+
             } />
         </MyCardGroup>
     );

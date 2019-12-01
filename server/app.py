@@ -65,7 +65,7 @@ class App:
         @sockets.on("random", namespace="/")
         def random(data):
             print("[Request] Random: {0}".format(data))
-            result = self.state.get_random_characters(data['characters'])
+            result = self.state.get_random_characters(data['random_number'])
             print(result)
             emit("random", result, json=True)
 

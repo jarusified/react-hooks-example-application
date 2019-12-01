@@ -13,4 +13,10 @@ export const socketEvents = ({ setValue }) => {
         });
     });
 
+    socket.on('random', ( currentCharacters ) => {
+        setValue(state => {
+            return { ...state, currentCharacters } 
+        });
+    });
+
 };
