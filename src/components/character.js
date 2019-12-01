@@ -75,7 +75,7 @@ function Character({ currentCharacters }) {
     console.log(currentCharacters)
 
     return (
-        <MyCardGroup style={{ width: 20 * superhero.length + 'rem', fontSize: '12px' }}>
+        <MyCardGroup style={{ width: 20 * currentCharacters.length + 'rem', fontSize: '12px' }}>
             <For of={currentCharacters} as={hero =>
                 <Card className="card" border="info" style={{ width: '18rem' }}>
                     <MyCharacterHeader>
