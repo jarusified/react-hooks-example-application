@@ -48,7 +48,7 @@ const RadarChart = props => {
         () => {
             const data = props.data
             const circleData = props.data[0]
-            const prevData = props.current
+            const prevData = cache.current
 
             const group = d3.select(ref.current)
             const groupWithData = group.selectAll("g.radarWrapper").data(data)
@@ -138,7 +138,8 @@ const RadarChart = props => {
                 .merge(groupWithData.select('path.radarArea'))
 
             const arcTween = (d, i) => {
-                return t => radarLine(t);
+                const interpolator = d3.interpolate(prevData[0], d);
+                return t => radarLine(interpolator(t));
             };
 
             radarArea
@@ -163,6 +164,7 @@ const RadarChart = props => {
                         .style("fill-opacity", cfg.opacityArea);
                 })
                 .transition()
+                .duration(500)
                 .attrTween("d", arcTween)
 
             let radarStroke = groupWithUpdate
@@ -206,7 +208,7 @@ const RadarChart = props => {
             cache.current = props.data
 
         },
-        [props.data]
+        [props.data, props.colorMap]
     );
 
     function wrap(text, width) {

@@ -20,7 +20,7 @@ const App = () => {
 
 	return (
 		<Fragment>
-			<Header placeholder="SuperHero API challenge - Suraj" characterList={characterList} />
+			<Header placeholder="SuperHero API challenge - Suraj Kesavan " characterList={characterList} />
 			<Character currentCharacters={currentCharacters} />
 		</Fragment>
 	);
