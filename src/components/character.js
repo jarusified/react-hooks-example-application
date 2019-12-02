@@ -1,5 +1,5 @@
 // eslint-disable
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { For } from 'react-loops'
 import styled from 'styled-components';
 
@@ -19,6 +19,11 @@ import ReactCardFlip from 'react-card-flip';
 // Icon import.
 import { FaRedo } from 'react-icons/fa';
 import { AiOutlineStar, AiTwotoneStar } from 'react-icons/ai'
+
+// Donut like Pie chart visualization. 
+import Pie from "./pie";
+
+import RadarChart from './radarChart'
 
 const ImgContainer = styled.div`
   position: relative;
@@ -81,7 +86,7 @@ const MyCardBody = styled(Card.Body)`
 
 function Character({ currentCharacters }) {
 
-    const [isFlipped, setIsFlipped] = useState(false)
+    const [isFlipped, setIsFlipped] = useState(true)
     const [isTarget, setIsTarget] = useState(false)
 
     const reverseFlip = (e) => {
@@ -97,14 +102,14 @@ function Character({ currentCharacters }) {
     }
 
     const parseName = (name) => {
-        if (name === '-' || name === ''){
+        if (name === '-' || name === '') {
             return 'Well, its a secret.'
         }
         return name
     }
 
     const parseOrigin = (origin) => {
-        if (origin === '-' || origin === ''){
+        if (origin === '-' || origin === '') {
             return 'Unknown.'
         }
         return origin
@@ -112,41 +117,71 @@ function Character({ currentCharacters }) {
 
     const parseOccupation = (occupation) => {
         let occupation_list = occupation.split(',')
-        if (occupation === '-' || occupation === ''){
+        if (occupation === '-' || occupation === '') {
             return 'No other work than being a super hero.'
         }
-        else if (occupation_list.length > 2){
-            let ret = ''.concat(occupation_list[0], ', ', occupation_list[1], ' and ', occupation_list.length - 2, ' others') 
+        else if (occupation_list.length > 2) {
+            let ret = ''.concat(occupation_list[0], ', ', occupation_list[1], ' and ', occupation_list.length - 2, ' others')
             return ret
         }
         return occupation
     }
 
     const parseAppearance = (appearance) => {
-        if (appearance === '-' || appearance === ''){
+        if (appearance === '-' || appearance === '') {
             return 'Unknown.'
         }
         return appearance
     }
 
     const parsePublisher = (publisher) => {
-        if (publisher === '-' || publisher === '' || publisher=='null'){
+        if (publisher === '-' || publisher === '' || publisher == 'null') {
             return 'Unknown.'
         }
         return publisher
     }
 
+    const parsePowerstatsPie = (data) => {
+        let ret = Object.keys(data).map((item, index) => {
+            return ({
+                idx: index,
+                axis: item,
+                value: item === null || item === undefined ? 0 : parseInt(data[item])
+            });
+        })
+        return ret
+    }
+
+    const parsePowerstatsRadar = (data) => {
+        let ret = [Object.keys(data).map((item, index) => {
+            return ({
+                axis: item,
+                value: item === "null" || item === undefined ? 0 : 0.01*parseInt(data[item])
+            });
+        })]
+        return ret
+    }
+
+    const setConstantColorMap = (data) => {
+        let ret = {}
+        let properties = Object.keys(data)
+        for(let i = 0; i < properties.length; i += 1){
+            ret[properties[i]] = i;
+        }
+        return ret
+    }
+
     return (
-        <MyCardGroup style={{ width: 20 * currentCharacters.length + 'rem', fontSize: '12px' }}>
+        <MyCardGroup style={{ width: 30 * currentCharacters.length + 'rem', fontSize: '12px' }}>
             <For of={currentCharacters} as={hero =>
 
                 <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
-                    <Card className="card" border="info" style={{ width: '18rem' }}>
+                    <Card className="card" border="info" style={{ width: '24rem' }}>
                         <MyCharacterHeader>
                             {hero.name}
-                            <FaRedo style={{ float: 'right' }} onClick={ reverseFlip }></FaRedo>
+                            <FaRedo style={{ float: 'right' }} onClick={reverseFlip}></FaRedo>
 
-                            <AiTwotoneStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'block' : 'none' }} onClick={assignAsTarget}></AiTwotoneStar> 
+                            <AiTwotoneStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'block' : 'none' }} onClick={assignAsTarget}></AiTwotoneStar>
                             <AiOutlineStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'none' : 'block' }} onClick={unassignAsTarget}></AiOutlineStar>
 
                         </MyCharacterHeader>
@@ -161,7 +196,7 @@ function Character({ currentCharacters }) {
                             <ListGroup variant="flush">
                                 <ListGroup.Item>
                                     <MyBoldText> Real name </MyBoldText>
-                                    {parseName(hero['biography']['full-name']) }
+                                    {parseName(hero['biography']['full-name'])}
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     <MyBoldText> Origin </MyBoldText>
@@ -169,7 +204,7 @@ function Character({ currentCharacters }) {
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     <MyBoldText> Occupation </MyBoldText>
-                                    {parseOccupation(hero['work']['occupation'])}    
+                                    {parseOccupation(hero['work']['occupation'])}
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     <MyBoldText> First Appearance </MyBoldText>
@@ -177,27 +212,49 @@ function Character({ currentCharacters }) {
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     <MyBoldText> Publisher </MyBoldText>
-                                    {parsePublisher(hero['biography']['publisher'])}    
+                                    {parsePublisher(hero['biography']['publisher'])}
                                 </ListGroup.Item>
                             </ListGroup>
                         </MyCardBody>
                     </Card>
 
-                    <Card className="card" border="info" style={{ width: '18rem' }}>
+                    <Card className="card" border="info" style={{ width: '350px' }}>
                         <MyCharacterHeader>
                             {hero.name}
                             <FaRedo style={{ float: 'right' }}></FaRedo>
 
-                            {isTarget} ?
-                            <AiTwotoneStar style={{ float: 'right' }}></AiTwotoneStar> :
-                            <AiOutlineStar style={{ float: 'right' }}></AiOutlineStar>
+                            <AiTwotoneStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'block' : 'none' }} onClick={assignAsTarget}></AiTwotoneStar>
+                            <AiOutlineStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'none' : 'block' }} onClick={unassignAsTarget}></AiOutlineStar>
 
                         </MyCharacterHeader>
+                        <ImgContainer>
+                            <Img src={hero.image.url} />
+                            <ImgMeta>
+                                <ImgIcons>
+                                </ImgIcons>
+                            </ImgMeta>
+                        </ImgContainer>
+                        <Pie
+                            data={parsePowerstatsPie(hero['powerstats'])}
+                            width={350}
+                            height={350}
+                            innerRadius={70}
+                            outerRadius={100}
+                            left={100}
+                            top={0}
+                            colorMap={setConstantColorMap(hero['powerstats'])}
+                        />
+
+                        <RadarChart
+                            data = { parsePowerstatsRadar(hero['powerstats'])}
+                            width={350}
+                            height={350}
+                            top={-25}
+                            left={25}
+                            colorMap={setConstantColorMap(hero['powerstats'])}
+                        />
                     </Card>
-
-
                 </ReactCardFlip>
-
             } />
         </MyCardGroup>
     );

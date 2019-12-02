@@ -2,7 +2,11 @@
 
 ## Interface 
 
+***Front Card view***
 ![Image description](figures/interface-final-front.png)
+
+***Back Card view***
+![Image description](figures/interface-final-back.png)
 
 
 ## Installation
@@ -79,3 +83,9 @@ Some links from where I learnt React hooks.
 3. <https://frontarm.com/james-k-nelson/usecontext-react-hook/>
 4. <https://medium.com/stationfive/how-to-create-a-pie-chart-with-d3-js-and-react-hooks-part-1-81bcd7f39b32>
 5. <https://medium.com/@alexboots/using-react-context-with-socket-io-3b7205c86a6d>
+6. <https://medium.com/stationfive/how-to-create-a-pie-chart-with-d3-js-and-react-hooks-part-1-81bcd7f39b32>
+
+## Issues left
+
+***Incosistent Card sizes.***
+Card heights depend on how much text is being displayed. This leads to inconsistent card sizes. 

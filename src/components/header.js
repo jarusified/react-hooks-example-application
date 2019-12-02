@@ -52,7 +52,7 @@ const Header = ({ placeholder, characterList }) => {
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
 				<Navbar.Collapse id="basic-navbar-nav">
 					<Nav className="mr-auto">
-
+						{/* Button to determine the number of random characters. Not quite working*/}
 						{/* <SplitButton
 							title={`Generate ${randomNumber} random characters`}
 							variant="outline-info"
