@@ -1,5 +1,5 @@
 // eslint-disable
-import React, { useState, useEffect, Fragment} from "react";
+import React, { useState, Fragment} from "react";
 import { For } from 'react-loops'
 import styled from 'styled-components';
 
@@ -148,7 +148,7 @@ function Character({ currentCharacters }) {
     }
 
     const parsePublisher = (publisher) => {
-        if (publisher === '-' || publisher === '' || publisher == 'null') {
+        if (publisher === '-' || publisher === '' || publisher === 'null') {
             return 'Unknown.'
         }
         return publisher

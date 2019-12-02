@@ -12,7 +12,7 @@
 ## Installation
 
 ``` bash
-    npm install
+    yarn install
     pip3 install -r requirements.txt
 ```
 
@@ -24,13 +24,15 @@
 ## To run the server
 
 ``` bash
-    python server.py
+   cd server
+   python3 app.py
 ```
 
 ## To run the client
 
 ``` bash
-    yarn start
+   cd ..
+   yarn start
 ```
 
 ## Notes

@@ -1,8 +1,5 @@
 flask
 flask_socketio
-networkx
 pandas
 requests
-json
 numpy
-pymongo

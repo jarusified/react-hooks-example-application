@@ -64,9 +64,9 @@ const RadarChart = props => {
 
             const filter = groupWithUpdate.append('defs').append('filter').attr('id', 'glow');
             const feMerge = filter.append('feMerge');
-            const feGaussianBlur = filter.append('feGaussianBlur').attr('stdDeviation', '2.5').attr('result', 'coloredBlur');
-            const feMergeNode_1 = feMerge.append('feMergeNode').attr('in', 'coloredBlur');
-            const feMergeNode_2 = feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+            filter.append('feGaussianBlur').attr('stdDeviation', '2.5').attr('result', 'coloredBlur');
+            feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+            feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
             //Wrapper for the grid & axes
             const axisGrid = groupWithUpdate
@@ -201,7 +201,7 @@ const RadarChart = props => {
                 .style("fill-opacity", 0.8);
 
             //Set up the small tooltip for when you hover over a circle
-            var tooltip = groupWithUpdate.append("text")
+            groupWithUpdate.append("text")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
 

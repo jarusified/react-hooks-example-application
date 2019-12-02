@@ -1,7 +1,4 @@
-import React, { useState, useMemo, useContext, Fragment } from 'react';
-
-// Panel imports
-// import Panel from 'react-bootstrap/Panel'
+import React, {useContext, Fragment } from 'react';
 
 // CSS imports
 import './App.css';
