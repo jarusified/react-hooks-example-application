@@ -1,11 +1,14 @@
 // eslint-disable
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment} from "react";
 import { For } from 'react-loops'
 import styled from 'styled-components';
 
 // Card imports
 import Card from 'react-bootstrap/Card'
 import CardGroup from 'react-bootstrap/CardGroup'
+
+// Button Imports
+import Button from 'react-bootstrap/Button'
 
 //ListGroup imports
 import ListGroup from 'react-bootstrap/ListGroup'
@@ -63,8 +66,13 @@ const Img = styled.img`
   height: 300px;
 `;
 
+const MyButton = styled(Button)`
+  padding-top: 70px;
+  padding-left: 5px;
+`;
+
 const MyCardGroup = styled(CardGroup)`
-  padding-top: 60px;
+  margin-top: 0px;
   padding-left: 5px;
 `;
 
@@ -90,7 +98,12 @@ function Character({ currentCharacters }) {
     const [isTarget, setIsTarget] = useState(false)
 
     const reverseFlip = (e) => {
-
+        if (isFlipped) {
+            setIsFlipped(false)
+        }
+        else {
+            setIsFlipped(true)
+        }
     }
 
     const assignAsTarget = (e) => {
@@ -152,111 +165,141 @@ function Character({ currentCharacters }) {
         return ret
     }
 
-    const parsePowerstatsRadar = (data) => {
-        let ret = [Object.keys(data).map((item, index) => {
+    const parsePowerstatsRadar = (data, target) => {
+        let ret = []
+        ret.push(Object.keys(target).map((item, index) => {
             return ({
                 axis: item,
-                value: item === "null" || item === undefined ? 0 : 0.01*parseInt(data[item])
+                value: item === "null" || item === undefined ? 0 : 0.01 * parseInt(target[item])
             });
-        })]
+        }));
+        ret.push(Object.keys(data).map((item, index) => {
+            return ({
+                axis: item,
+                value: item === "null" || item === undefined ? 0 : 0.01 * parseInt(data[item])
+            });
+        }));
         return ret
     }
 
-    const setConstantColorMap = (data) => {
+    const setConstantColorMap = (data, target) => {
         let ret = {}
         let properties = Object.keys(data)
-        for(let i = 0; i < properties.length; i += 1){
+        for (let i = 0; i < properties.length; i += 1) {
             ret[properties[i]] = i;
         }
         return ret
     }
 
     return (
-        <MyCardGroup style={{ width: 30 * currentCharacters.length + 'rem', fontSize: '12px' }}>
-            <For of={currentCharacters} as={hero =>
+        <Fragment>
+            <MyButton variant="outline-info"
+                onClick={reverseFlip}>
+                Flip all cards
+			</MyButton>
+            <MyCardGroup style={{ width: 30 * currentCharacters.length + 'rem', fontSize: '12px' }}>
+                <For of={currentCharacters} as={hero =>
 
-                <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
-                    <Card className="card" border="info" style={{ width: '24rem' }}>
-                        <MyCharacterHeader>
-                            {hero.name}
-                            <FaRedo style={{ float: 'right' }} onClick={reverseFlip}></FaRedo>
+                    <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
+                        <Card className="card" border="info" style={{ width: '350px' }}>
+                            <MyCharacterHeader>
+                                {hero.name}
+                                <FaRedo style={{ float: 'right' }} onClick={reverseFlip}></FaRedo>
 
-                            <AiTwotoneStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'block' : 'none' }} onClick={assignAsTarget}></AiTwotoneStar>
-                            <AiOutlineStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'none' : 'block' }} onClick={unassignAsTarget}></AiOutlineStar>
+                                <AiTwotoneStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'block' : 'none' }} onClick={assignAsTarget}></AiTwotoneStar>
+                                <AiOutlineStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'none' : 'block' }} onClick={unassignAsTarget}></AiOutlineStar>
 
-                        </MyCharacterHeader>
-                        <ImgContainer>
-                            <Img src={hero.image.url} />
-                            <ImgMeta>
-                                <ImgIcons>
-                                </ImgIcons>
-                            </ImgMeta>
-                        </ImgContainer>
-                        <MyCardBody>
-                            <ListGroup variant="flush">
-                                <ListGroup.Item>
-                                    <MyBoldText> Real name </MyBoldText>
-                                    {parseName(hero['biography']['full-name'])}
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <MyBoldText> Origin </MyBoldText>
-                                    {parseOrigin(hero['biography']['place-of-birth'])}
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <MyBoldText> Occupation </MyBoldText>
-                                    {parseOccupation(hero['work']['occupation'])}
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <MyBoldText> First Appearance </MyBoldText>
-                                    {parseAppearance(hero['biography']['first-appearance'])}
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <MyBoldText> Publisher </MyBoldText>
-                                    {parsePublisher(hero['biography']['publisher'])}
-                                </ListGroup.Item>
-                            </ListGroup>
-                        </MyCardBody>
-                    </Card>
+                            </MyCharacterHeader>
+                            <ImgContainer>
+                                <Img src={hero.image.url} />
+                                <ImgMeta>
+                                    <ImgIcons>
+                                    </ImgIcons>
+                                </ImgMeta>
+                            </ImgContainer>
+                            <MyCardBody>
+                                <ListGroup variant="flush">
+                                    <ListGroup.Item>
+                                        <MyBoldText> Real name </MyBoldText>
+                                        {parseName(hero['biography']['full-name'])}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item>
+                                        <MyBoldText> Origin </MyBoldText>
+                                        {parseOrigin(hero['biography']['place-of-birth'])}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item>
+                                        <MyBoldText> Occupation </MyBoldText>
+                                        {parseOccupation(hero['work']['occupation'])}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item>
+                                        <MyBoldText> First Appearance </MyBoldText>
+                                        {parseAppearance(hero['biography']['first-appearance'])}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item>
+                                        <MyBoldText> Publisher </MyBoldText>
+                                        {parsePublisher(hero['biography']['publisher'])}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item>
+                                        <MyBoldText> Eye-color </MyBoldText>
+                                        {parsePublisher(hero['appearance']['eye-color'])}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item>
+                                        <MyBoldText> Gender </MyBoldText>
+                                        {parsePublisher(hero['appearance']['gender'])}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item>
+                                        <MyBoldText> Hair color </MyBoldText>
+                                        {parsePublisher(hero['appearance']['hair-color'])}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item>
+                                        <MyBoldText> Race </MyBoldText>
+                                        {parsePublisher(hero['appearance']['race'])}
+                                    </ListGroup.Item>
+                                   
+                                </ListGroup>
+                            </MyCardBody>
+                        </Card>
 
-                    <Card className="card" border="info" style={{ width: '350px' }}>
-                        <MyCharacterHeader>
-                            {hero.name}
-                            <FaRedo style={{ float: 'right' }}></FaRedo>
+                        <Card className="card" border="info" style={{ width: '350px' }}>
+                            <MyCharacterHeader>
+                                {hero.name}
+                                <FaRedo style={{ float: 'right' }}></FaRedo>
 
-                            <AiTwotoneStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'block' : 'none' }} onClick={assignAsTarget}></AiTwotoneStar>
-                            <AiOutlineStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'none' : 'block' }} onClick={unassignAsTarget}></AiOutlineStar>
+                                <AiTwotoneStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'block' : 'none' }} onClick={assignAsTarget}></AiTwotoneStar>
+                                <AiOutlineStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'none' : 'block' }} onClick={unassignAsTarget}></AiOutlineStar>
 
-                        </MyCharacterHeader>
-                        <ImgContainer>
-                            <Img src={hero.image.url} />
-                            <ImgMeta>
-                                <ImgIcons>
-                                </ImgIcons>
-                            </ImgMeta>
-                        </ImgContainer>
-                        <Pie
-                            data={parsePowerstatsPie(hero['powerstats'])}
-                            width={350}
-                            height={350}
-                            innerRadius={70}
-                            outerRadius={100}
-                            left={100}
-                            top={0}
-                            colorMap={setConstantColorMap(hero['powerstats'])}
-                        />
+                            </MyCharacterHeader>
+                            <ImgContainer>
+                                <Img src={hero.image.url} />
+                                <ImgMeta>
+                                    <ImgIcons>
+                                    </ImgIcons>
+                                </ImgMeta>
+                            </ImgContainer>
+                            <Pie
+                                data={parsePowerstatsPie(hero['powerstats'])}
+                                width={350}
+                                height={350}
+                                innerRadius={70}
+                                outerRadius={100}
+                                left={100}
+                                top={0}
+                                colorMap={setConstantColorMap(hero['powerstats'])}
+                            />
 
-                        <RadarChart
-                            data = { parsePowerstatsRadar(hero['powerstats'])}
-                            width={350}
-                            height={350}
-                            top={-25}
-                            left={25}
-                            colorMap={setConstantColorMap(hero['powerstats'])}
-                        />
-                    </Card>
-                </ReactCardFlip>
-            } />
-        </MyCardGroup>
+                            <RadarChart
+                                data={parsePowerstatsRadar(hero['powerstats'], currentCharacters[0]['powerstats'])}
+                                width={350}
+                                height={350}
+                                top={-25}
+                                left={25}
+                                colorMap={setConstantColorMap(hero['powerstats'], currentCharacters[0]['powerstats'])}
+                            />
+                        </Card>
+                    </ReactCardFlip>
+                } />
+            </MyCardGroup>
+        </Fragment>
     );
 };
 

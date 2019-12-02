@@ -192,7 +192,7 @@ const RadarChart = props => {
             radarCircle
                 .attr("class", "radarCircle")
                 .attr("r", cfg.dotRadius)
-                .attr("cx", function (d, i) { console.log(d); return rScale(d.value) * Math.cos(angleSlice * props.colorMap[d.axis] - Math.PI / 2); })
+                .attr("cx", function (d, i) { return rScale(d.value) * Math.cos(angleSlice * props.colorMap[d.axis] - Math.PI / 2); })
                 .attr("cy", function (d, i) { return rScale(d.value) * Math.sin(angleSlice * props.colorMap[d.axis] - Math.PI / 2); })
                 .style("fill", function (d, i, j) {
                     let color_idx = props.colorMap[d.axis];
