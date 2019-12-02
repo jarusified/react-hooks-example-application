@@ -26,7 +26,7 @@ const RadarChart = props => {
     };
 
     var maxValue = 1.00
-    
+
     var allAxis = (props.data[0].map(function (i, j) { return i.axis })),	//Names of each axis
         total = allAxis.length,					//The number of different axes
         radius = Math.min(cfg.w / 3, cfg.h / 3), 	//Radius of the outermost circle
@@ -47,13 +47,16 @@ const RadarChart = props => {
     useEffect(
         () => {
             const data = props.data
+            const circleData = props.data[0]
             const prevData = props.current
 
             const group = d3.select(ref.current)
             const groupWithData = group.selectAll("g.radarWrapper").data(data)
+            const circleWithData = group.selectAll('g.circleWrapper').data(circleData)
 
             groupWithData.exit().remove()
-
+            circleWithData.exit().remove()
+            
             const groupWithUpdate = groupWithData
                 .enter()
                 .append('g')
@@ -66,7 +69,10 @@ const RadarChart = props => {
             const feMergeNode_2 = feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
             //Wrapper for the grid & axes
-            const axisGrid = groupWithUpdate.append("g").attr("class", "axisWrapper");
+            const axisGrid = groupWithUpdate
+                .append("g")
+                .attr("class", "axisWrapper")
+                .merge(groupWithData.select("g.axisWrapper"))
 
             //Draw the background circles
             axisGrid.selectAll(".levels")
@@ -114,27 +120,28 @@ const RadarChart = props => {
                 .style("font-size", "11px")
                 .attr("text-anchor", "middle")
                 .attr("dy", "0.35em")
-                .attr("x", function (d, i) { 
+                .attr("x", function (d, i) {
                     return rScale(maxValue * cfg.labelFactor) * Math.cos(angleSlice * props.colorMap[d] - Math.PI / 2);
                 })
-                .attr("y", function (d, i) { 
-                    return rScale(maxValue * cfg.labelFactor) * Math.sin(angleSlice * props.colorMap[d] - Math.PI / 2); 
+                .attr("y", function (d, i) {
+                    return rScale(maxValue * cfg.labelFactor) * Math.sin(angleSlice * props.colorMap[d] - Math.PI / 2);
                 })
-                .style("fill", function (d, i) { 
-                    let color_idx = props.colorMap[d]; 
-                    return cfg.color(color_idx); 
+                .style("fill", function (d, i) {
+                    let color_idx = props.colorMap[d];
+                    return cfg.color(color_idx);
                 })
                 .text(function (d) { return d })
                 .call(wrap, cfg.wrapWidth);
 
-            let blobWrapper = groupWithUpdate
-                .append('g')
-                .attr("class", "radarWrapper");
+            let radarArea = groupWithUpdate
+                .append('path')
+                .merge(groupWithData.select('path.radarArea'))
 
-            blobWrapper.selectAll('.radarArea')
-                .data(data)
-                .enter()
-                .append("path")
+            const arcTween = (d, i) => {
+                return t => radarLine(t);
+            };
+
+            radarArea
                 .attr("class", "radarArea")
                 .attr("d", function (d, i) { return radarLine(d); })
                 .style("fill", function (d, i) { return cfg.color(i); })
@@ -154,10 +161,16 @@ const RadarChart = props => {
                     d3.selectAll(".radarArea")
                         .transition().duration(200)
                         .style("fill-opacity", cfg.opacityArea);
-                });
+                })
+                .transition()
+                .attrTween("d", arcTween)
+
+            let radarStroke = groupWithUpdate
+                .append('path')
+                .merge(groupWithData.select('path.radarStroke'))
 
             //Create the outlines	
-            blobWrapper.append("path")
+            radarStroke
                 .attr("class", "radarStroke")
                 .attr("d", function (d, i) { return radarLine(d); })
                 .style("stroke-width", cfg.strokeWidth + "px")
@@ -165,48 +178,32 @@ const RadarChart = props => {
                 .style("fill", "none")
                 .style("filter", "url(#glow)");
 
-            //Append the circles
-            blobWrapper.selectAll(".radarCircle")
-                .data(function (d, i) { return d; })
-                .enter().append("circle")
+            const circleWithUpdate = circleWithData
+                .enter()
+                .append('g')
+                .attr('class', 'circleWrapper')
+
+            let radarCircle = circleWithUpdate
+                .append('circle')
+                .merge(circleWithData.select('circle.radarCircle'))
+            
+            radarCircle
                 .attr("class", "radarCircle")
                 .attr("r", cfg.dotRadius)
-                .attr("cx", function (d, i) { return rScale(d.value) * Math.cos(angleSlice * i - Math.PI / 2); })
-                .attr("cy", function (d, i) { return rScale(d.value) * Math.sin(angleSlice * i - Math.PI / 2); })
-                .style("fill", function (d, i, j) { 
-                    let color_idx = props.colorMap[d.axis]; 
-                    return cfg.color(color_idx); 
+                .attr("cx", function (d, i) { console.log(d); return rScale(d.value) * Math.cos(angleSlice * props.colorMap[d.axis] - Math.PI / 2); })
+                .attr("cy", function (d, i) { return rScale(d.value) * Math.sin(angleSlice * props.colorMap[d.axis] - Math.PI / 2); })
+                .style("fill", function (d, i, j) {
+                    let color_idx = props.colorMap[d.axis];
+                    return cfg.color(color_idx);
                 })
                 .style("fill-opacity", 0.8);
-
-            //Append the backgrounds	
-            blobWrapper
-                .append("path")
-                .attr("class", "radarArea")
-                .attr("d", function (d, i) { return radarLine(d); })
-                .style("fill", function (d, i, j) { return '#B1C739'; })
-                .style("fill-opacity", cfg.opacityArea)
-                .on('mouseover', function (d, i) {
-                    //Dim all blobs
-                    d3.selectAll(".radarArea")
-                        .transition().duration(200)
-                        .style("fill-opacity", 0.1);
-                    //Bring back the hovered over blob
-                    d3.select(this)
-                        .transition().duration(200)
-                        .style("fill-opacity", 0.7);
-                })
-                .on('mouseout', function () {
-                    //Bring back all blobs
-                    d3.selectAll(".radarArea")
-                        .transition().duration(200)
-                        .style("fill-opacity", cfg.opacityArea);
-                });
 
             //Set up the small tooltip for when you hover over a circle
             var tooltip = groupWithUpdate.append("text")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
+
+            cache.current = props.data
 
         },
         [props.data]
@@ -243,7 +240,12 @@ const RadarChart = props => {
             <g
                 className="radarWrapper"
                 ref={ref}
-                transform={`translate(${props.width / 2} ${props.height / 2 })`}
+                transform={`translate(${props.width / 2} ${props.height / 2})`}
+            />
+            <g
+                className="circleWrapper"
+                ref={ref}
+                transform={`translate(${props.width / 2} ${props.height / 2})`}
             />
         </svg>
     )

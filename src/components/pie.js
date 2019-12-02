@@ -56,10 +56,11 @@ const Pie = props => {
 
             const text = groupWithUpdate
                 .append("text")
-                .merge(groupWithData.select("text"));
+                .merge(groupWithData.select("text.value"));
 
             text
                 .attr("text-anchor", "middle")
+                .attr("class", "value")
                 .attr("alignment-baseline", "middle")
                 .style("fill", "white")
                 .style("font-size", 10)
@@ -72,7 +73,7 @@ const Pie = props => {
 
             const label = groupWithUpdate
                 .append("text")
-                .merge(groupWithData.select("text"))
+                .merge(groupWithData.select("text.legend"))
 
             label
                 .attr("class", "legend")
