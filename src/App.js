@@ -1,5 +1,4 @@
-import React, { useState, useMemo, useContext } from 'react';
-import { CharacterContext } from './CharacterContext'
+import React, { useState, useMemo, useContext, Fragment } from 'react';
 
 // Panel imports
 // import Panel from 'react-bootstrap/Panel'
@@ -16,21 +15,14 @@ import Character from './components/character';
 // Socket context
 import SocketContext from './components/socket_context/context'
 
-// Socket events 
-import { init, random } from './sockets/emit';
-
 const App = () => {
-	const [superhero, setSuperHero] = useState([])
-
-	const providerValue = useMemo(() => ({ superhero, setSuperHero }), [superhero, setSuperHero])
-
 	const { currentCharacters, characterList } = useContext(SocketContext)
 
 	return (
-		<CharacterContext.Provider value={providerValue}>
-			<Header placeholder="SuperHero API challenge - Suraj" characterList={ characterList }/>
-			<Character currentCharacters={ currentCharacters }/>
-		</CharacterContext.Provider>
+		<Fragment>
+			<Header placeholder="SuperHero API challenge - Suraj" characterList={characterList} />
+			<Character currentCharacters={currentCharacters} />
+		</Fragment>
 	);
 }
 
