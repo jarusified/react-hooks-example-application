@@ -1,8 +1,8 @@
 # Illumio-coding challenge
 
-## Intreface 
+## Interface 
 
-![Image description](figures/interface-final.png)
+![Image description](figures/interface-final-front.png)
 
 
 ## Installation
@@ -32,7 +32,7 @@
 ## Notes
 
 1. ***Testing the API:*** Since the given website for SuperHeroAPI does not give
-   information about all the possible characters, I send multiple requests
+   information about all the possible char acters, I send multiple requests
    between 1 to 1000 to find how many characters do exist. From the bruteforce
    script (refer Superhero scraper.ipynb), I figured there are 732 characters in
    the data.
@@ -50,9 +50,10 @@
 
 3. ***Storing into a database:*** MongoDB or something. [TODO.] <https://stackoverflow.com/questions/20167194/insert-a-pandas-dataframe-into-mongodb-using-pymongo>
 
-4. ***React hooks:*** Recently, I heard about how react does not use class based
-   components and I thought I should probably give React a try for the following
-   reasons: 
+4. ***Why React hooks:*** Recently, I heard about how react got rid of binding
+   render props multiple times in class-based components with the introduction
+   of functional components, called React hooks. And I thought I should probably
+   this a try. My experience with React is still novice and I had to learn by figuring out how: 
    1. Functional components are more stateful.
    2. 
 

@@ -13,6 +13,6 @@ export const initSockets = ({ setValue }) => {
     init();
 
     random({
-        "random_number": 4
+        "random_number": 10
     })
 };

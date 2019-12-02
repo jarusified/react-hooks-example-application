@@ -8,12 +8,14 @@ export const socketEvents = ({ setValue }) => {
     });
 
     socket.on('search', ( currentCharacters ) => {
+        console.log(currentCharacters)
         setValue(state => {
             return { ...state, currentCharacters } 
         });
     });
 
     socket.on('random', ( currentCharacters ) => {
+        console.log(currentCharacters)
         setValue(state => {
             return { ...state, currentCharacters } 
         });

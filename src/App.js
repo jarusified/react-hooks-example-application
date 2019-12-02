@@ -9,10 +9,15 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 
+// Component imports
 import Header from './components/header';
 import Character from './components/character';
 
+// Socket context
 import SocketContext from './components/socket_context/context'
+
+// Socket events 
+import { init, random } from './sockets/emit';
 
 const App = () => {
 	const [superhero, setSuperHero] = useState([])

@@ -70,8 +70,13 @@ const MyCharacterHeader = styled(Card.Header)`
 
 const MyBoldText = styled(Text)`
   font-weight: 900;
-  font-size: 14px;
+  font-size: 16px;
   padding-left: 2px
+`
+
+const MyCardBody = styled(Card.Body)`
+  padding: 0.5rem;
+  font-size: 14px;
 `
 
 function Character({ currentCharacters }) {
@@ -91,6 +96,46 @@ function Character({ currentCharacters }) {
 
     }
 
+    const parseName = (name) => {
+        if (name === '-' || name === ''){
+            return 'Well, its a secret.'
+        }
+        return name
+    }
+
+    const parseOrigin = (origin) => {
+        if (origin === '-' || origin === ''){
+            return 'Unknown.'
+        }
+        return origin
+    }
+
+    const parseOccupation = (occupation) => {
+        let occupation_list = occupation.split(',')
+        if (occupation === '-' || occupation === ''){
+            return 'No other work than being a super hero.'
+        }
+        else if (occupation_list.length > 2){
+            let ret = ''.concat(occupation_list[0], ', ', occupation_list[1], ' and ', occupation_list.length - 2, ' others') 
+            return ret
+        }
+        return occupation
+    }
+
+    const parseAppearance = (appearance) => {
+        if (appearance === '-' || appearance === ''){
+            return 'Unknown.'
+        }
+        return appearance
+    }
+
+    const parsePublisher = (publisher) => {
+        if (publisher === '-' || publisher === '' || publisher=='null'){
+            return 'Unknown.'
+        }
+        return publisher
+    }
+
     return (
         <MyCardGroup style={{ width: 20 * currentCharacters.length + 'rem', fontSize: '12px' }}>
             <For of={currentCharacters} as={hero =>
@@ -101,7 +146,7 @@ function Character({ currentCharacters }) {
                             {hero.name}
                             <FaRedo style={{ float: 'right' }} onClick={ reverseFlip }></FaRedo>
 
-                            <AiTwotoneStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'block' : 'none' }} onClick={assignAsTarget}></AiTwotoneStar> :
+                            <AiTwotoneStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'block' : 'none' }} onClick={assignAsTarget}></AiTwotoneStar> 
                             <AiOutlineStar style={{ marginRight: '5px', float: 'right', display: isTarget ? 'none' : 'block' }} onClick={unassignAsTarget}></AiOutlineStar>
 
                         </MyCharacterHeader>
@@ -112,26 +157,30 @@ function Character({ currentCharacters }) {
                                 </ImgIcons>
                             </ImgMeta>
                         </ImgContainer>
-                        <Card.Body>
+                        <MyCardBody>
                             <ListGroup variant="flush">
                                 <ListGroup.Item>
                                     <MyBoldText> Real name </MyBoldText>
-                                    {hero['biography']['full-name']}</ListGroup.Item>
+                                    {parseName(hero['biography']['full-name']) }
+                                </ListGroup.Item>
                                 <ListGroup.Item>
                                     <MyBoldText> Origin </MyBoldText>
-                                    {hero['biography']['place-of-birth']}</ListGroup.Item>
-
+                                    {parseOrigin(hero['biography']['place-of-birth'])}
+                                </ListGroup.Item>
                                 <ListGroup.Item>
                                     <MyBoldText> Occupation </MyBoldText>
-                                    {hero['work']['occupation']}</ListGroup.Item>
+                                    {parseOccupation(hero['work']['occupation'])}    
+                                </ListGroup.Item>
                                 <ListGroup.Item>
                                     <MyBoldText> First Appearance </MyBoldText>
-                                    {hero['work']['first-appearance']}</ListGroup.Item>
+                                    {parseAppearance(hero['biography']['first-appearance'])}
+                                </ListGroup.Item>
                                 <ListGroup.Item>
                                     <MyBoldText> Publisher </MyBoldText>
-                                    {hero['biography']['publisher']}</ListGroup.Item>
+                                    {parsePublisher(hero['biography']['publisher'])}    
+                                </ListGroup.Item>
                             </ListGroup>
-                        </Card.Body>
+                        </MyCardBody>
                     </Card>
 
                     <Card className="card" border="info" style={{ width: '18rem' }}>
